@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>California Road Trip — Big Sur + Napa Valley</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1410;
+      --parchment:  #f6f3ee;
+      --wine:       #6b2737;
+      --gold:       #b8963e;
+      --ocean:      #1e4d5c;
+      --pine:       #2e5e44;
+      --mist:       #8a9b8e;
+      --sand:       #b89060;
+      --rule-wine:  rgba(107,39,55,0.15);
+      --rule-ocean: rgba(30,77,92,0.15);
+    }
+
+    body {
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero-panel {
+      padding: 56px 36px 48px;
+      position: relative;
+    }
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        -45deg, transparent, transparent 30px,
+        rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px
+      );
+      pointer-events: none;
+    }
+    .hero-panel.bigsur  { background: var(--ocean); color: var(--parchment); }
+    .hero-panel.napa    { background: var(--wine);  color: var(--parchment); }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.85;
+    }
+    .hero-panel.bigsur .hero-eyebrow { color: var(--sand); }
+    .hero-panel.napa   .hero-eyebrow { color: var(--gold); }
+    .hero-panel h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .hero-panel h2 em { font-style: italic; }
+    .hero-panel.bigsur h2 em { color: var(--sand); }
+    .hero-panel.napa   h2 em { color: var(--gold); }
+    .hero-sub {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      opacity: 0.6;
+      margin-top: 8px;
+    }
+    .hero-rule {
+      width: 36px; height: 1px;
+      margin: 16px auto 0;
+      opacity: 0.4;
+    }
+    .hero-panel.bigsur .hero-rule { background: var(--sand); }
+    .hero-panel.napa   .hero-rule { background: var(--gold); }
+
+    .hero-footer {
+      background: var(--ink);
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+    }
+    .hero-footer span { color: rgba(255,255,255,0.25); }
+
+    /* ── TRIP SECTION DIVIDER ── */
+    .trip-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 32px 24px 0;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .trip-divider-line { flex: 1; height: 1px; }
+    .trip-divider-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .trip-divider.bigsur .trip-divider-line  { background: var(--rule-ocean); }
+    .trip-divider.bigsur .trip-divider-label { background: #e4edf0; color: var(--ocean); }
+    .trip-divider.napa   .trip-divider-line  { background: var(--rule-wine); }
+    .trip-divider.napa   .trip-divider-label { background: #f0e8ef; color: var(--wine); }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── DAY BLOCK ── */
+    .day { margin-top: 52px; }
+    .day-header {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 12px;
+    }
+    .day-header.bigsur { border-bottom: 1px solid var(--rule-ocean); }
+    .day-header.napa   { border-bottom: 1px solid var(--rule-wine); }
+    .day-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+    .day-date {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .day-header.bigsur .day-date { color: var(--sand); }
+    .day-header.napa   .day-date { color: var(--gold); }
+
+    /* ── EVENT CARD ── */
+    .event {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 0 20px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .event:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 35px;
+      top: 44px;
+      bottom: -24px;
+      width: 1px;
+    }
+    .bigsur-section .event:not(:last-child)::after { background: var(--rule-ocean); }
+    .napa-section   .event:not(:last-child)::after { background: var(--rule-wine); }
+
+    .event-time-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+    }
+    .event-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+    }
+    .event-time {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    /* color helpers */
+    .c-ocean { color: var(--ocean); } .d-ocean { background: var(--ocean); }
+    .c-pine  { color: var(--pine);  } .d-pine  { background: var(--pine);  }
+    .c-sand  { color: var(--sand);  } .d-sand  { background: var(--sand);  }
+    .c-mist  { color: var(--mist);  } .d-mist  { background: var(--mist);  }
+    .c-wine  { color: var(--wine);  } .d-wine  { background: var(--wine);  }
+    .c-gold  { color: var(--gold);  } .d-gold  { background: var(--gold);  }
+    .c-purple { color: #5a3278;     } .d-purple { background: #5a3278;     }
+
+    .event-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .event-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .event-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    .event-tag {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tag-drive    { background: #e4edf0; color: var(--ocean); }
+    .tag-hike     { background: #e6f0ea; color: var(--pine); }
+    .tag-stop     { background: #edf2f0; color: var(--mist); }
+    .tag-food     { background: #fdf4e3; color: #8a6020; }
+    .tag-hotel    { background: #f0e8ef; color: var(--wine); }
+    .tag-dinner   { background: #fdf4e3; color: #8a6020; }
+    .tag-activity { background: #eaf0eb; color: #3a6040; }
+    .tag-pickup   { background: #eef0f8; color: #3a4070; }
+    .tag-winery   { background: #f2edf8; color: #5a3278; }
+    .tag-carmel   { background: #e4edf0; color: var(--ocean); }
+
+    .event-address {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+    .event-address a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid #ddd;
+    }
+    .event-address a:hover { color: var(--ocean); border-color: var(--ocean); }
+
+    .detail-list {
+      margin-top: 10px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .detail-list li {
+      font-size: 12.5px;
+      color: #555;
+      padding-left: 14px;
+      position: relative;
+    }
+    .detail-list li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
+    .bigsur-section .detail-list li::before { color: var(--sand); }
+    .napa-section   .detail-list li::before { color: var(--gold); }
+
+    .alert {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .bigsur-section .alert { background: #edf5f8; border-left: 3px solid var(--ocean); color: #1a3f4d; }
+    .napa-section   .alert { background: #fff8f0; border-left: 3px solid var(--gold);  color: #6b4a1a; }
+
+    /* ── DRIVE BAR ── */
+    .drive-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .drive-bar span { opacity: 0.55; font-weight: 300; }
+    .bigsur-section .drive-bar { background: #e4edf0; color: var(--ocean); }
+    .napa-section   .drive-bar { background: #f0ebe4; color: #7a4a20; }
+
+    /* ── TRANSITION CARD ── */
+    .transition-card {
+      background: var(--ink);
+      color: var(--parchment);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin: 40px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .transition-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .transition-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .transition-text h3 em { font-style: italic; color: var(--gold); }
+    .transition-text p {
+      font-size: 12.5px;
+      opacity: 0.6;
+      line-height: 1.5;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mist);
+      border-top: 1px solid var(--rule-wine);
+      margin-top: 56px;
+    }
+
+    @media (max-width: 560px) {
+      .hero-split { grid-template-columns: 1fr; }
+      .hero-panel { padding: 40px 24px 36px; }
+      .event { grid-template-columns: 58px 1fr; }
+      .event-card { padding: 14px 16px; }
+      .day-header { flex-direction: column; gap: 4px; }
+      .transition-card { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-split">
+      <div class="hero-panel bigsur">
+        <div class="hero-eyebrow">Jun 28 – 29 · PCH</div>
+        <h2>Big <em>Sur</em></h2>
+        <div class="hero-sub">HB → Big Sur → Carmel · 1 night</div>
+        <div class="hero-rule"></div>
+      </div>
+      <div class="hero-panel napa">
+        <div class="hero-eyebrow">Jun 29 – Jul 2 · Wine Country</div>
+        <h2>Napa <em>Valley</em></h2>
+        <div class="hero-sub">The Meritage Resort · 3 nights</div>
+        <div class="hero-rule"></div>
+      </div>
+    </div>
+    <div class="hero-footer">
+      Huntington Beach <span>→</span> Big Sur <span>→</span> Carmel <span>→</span> Napa Valley <span>·</span> June 28 – July 2, 2026
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ BIG SUR ══════════════════════════════ -->
+
+  <div class="trip-divider bigsur">
+    <div class="trip-divider-line"></div>
+    <div class="trip-divider-label">🌊 Big Sur · Day 1</div>
+    <div class="trip-divider-line"></div>
+  </div>
+
+  <div class="container bigsur-section">
+
+    <!-- SUN JUN 28 -->
+    <div class="day">
+      <div class="day-header bigsur">
+        <span class="day-label">Sunday</span>
+        <span class="day-date">June 28</span>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-ocean"></div>
+          <div class="event-time c-ocean">5:30 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Depart Huntington Beach</div>
+            <span class="event-tag tag-drive">Drive</span>
+          </div>
+          <div class="event-address">Head north on PCH — stay on the coast the whole way</div>
+          <ul class="detail-list">
+            <li>Early start beats Malibu traffic completely — PCH at dawn is empty and stunning</li>
+            <li>Gas up before leaving — stations get pricey north of San Luis Obispo</li>
+            <li>Grab coffee to go — first real stop is ~2.5 hrs in</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~2.5 hrs <span>Huntington Beach → Morro Bay via PCH</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-sand"></div>
+          <div class="event-time c-sand">8:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Frankie &amp; Lola's Front Street Cafe</div>
+            <span class="event-tag tag-food">Breakfast</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=1154+Front+St,+Morro+Bay,+CA+93442" target="_blank">1154 Front St, Morro Bay</a>
+            · (805) 771-9306
+          </div>
+          <ul class="detail-list">
+            <li>Opens 7:00 AM · Closes 12:30 PM — arrive by 8 to beat the wait</li>
+            <li>Waterfront views of Morro Rock from the patio</li>
+            <li>Order the cinnamon rolls and the PZP — locals swear by both</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~1 hr <span>Morro Bay → Pfeiffer Beach, Big Sur (Hwy 1 — narrow, no cell service)</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-pine"></div>
+          <div class="event-time c-pine">10:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Pfeiffer Beach</div>
+            <span class="event-tag tag-stop">Scenic Stop</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=9101+Sycamore+Canyon+Rd,+Big+Sur,+CA+93920" target="_blank">Sycamore Canyon Rd, Big Sur</a>
+            · $12 day use
+          </div>
+          <ul class="detail-list">
+            <li>Only 50 vehicles allowed — arriving at 10 AM on a Sunday should be fine</li>
+            <li>Purple-tinged sand from manganese garnet in the cliffs</li>
+            <li>Iconic keyhole rock arch — waves crash through it at high tide</li>
+            <li>Turn off Hwy 1 onto Sycamore Canyon Rd — small sign, easy to miss</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~15 min <span>Pfeiffer Beach → Julia Pfeiffer Burns State Park</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-pine"></div>
+          <div class="event-time c-pine">11:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Julia Pfeiffer Burns State Park</div>
+            <span class="event-tag tag-hike">Hike</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=52801+CA-1,+Big+Sur,+CA+93920" target="_blank">52801 CA-1, Big Sur</a>
+            · (831) 667-1112 · $10 day use
+          </div>
+          <ul class="detail-list">
+            <li>McWay Falls overlook — 80-ft waterfall dropping onto a cove beach</li>
+            <li>Ewoldsen Loop Trail: ~4 miles, 1,600 ft gain, dense redwoods + coastal views — best hike of the trip</li>
+            <li>Pay the entrance fee — rangers actively ticket non-payers</li>
+          </ul>
+          <div class="alert">McWay Falls beach trail is closed for construction — viewable from the overlook above, still stunning. Ewoldsen loop is fully open.</div>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~5 min <span>Julia Pfeiffer Burns → Nepenthe</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-sand"></div>
+          <div class="event-time c-sand">1:30 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Nepenthe</div>
+            <span class="event-tag tag-food">Lunch</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=48510+CA-1,+Big+Sur,+CA+93920" target="_blank">48510 CA-1, Big Sur</a>
+            · (831) 667-2345
+          </div>
+          <ul class="detail-list">
+            <li>Opens 11:30 AM — no reservation needed for lunch</li>
+            <li>800 ft above the Pacific — one of the best views on the California coast</li>
+            <li>Order the Ambrosia burger and the famous ambrosia sauce</li>
+            <li>Grab a deck table if you can</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~35 min <span>Nepenthe → Bixby Bridge + Garrapata State Park</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-pine"></div>
+          <div class="event-time c-pine">2:30 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Bixby Bridge + Garrapata State Park</div>
+            <span class="event-tag tag-hike">Hike + Views</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=34500+CA-1,+Carmel,+CA+93923" target="_blank">34500 CA-1, Carmel</a>
+            · Free · Open 24 hrs
+          </div>
+          <ul class="detail-list">
+            <li>Stop at Bixby Bridge Vista Point first — pull off on the north side for the best angle</li>
+            <li>Garrapata is 5 min further north — free parking, no day use fee</li>
+            <li>Whale Hill loop: ~2 miles, sea otters visible below the bluffs</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="drive-bar">🚗 ~20 min <span>Garrapata → Carmel-by-the-Sea</span></div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-ocean"></div>
+          <div class="event-time c-ocean">4:30 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Hotel Check-In · Carmel</div>
+            <span class="event-tag tag-carmel">Overnight</span>
+          </div>
+          <div class="event-address">Carmel-by-the-Sea, CA</div>
+          <ul class="detail-list">
+            <li><strong>Recommended:</strong> Hyatt Carmel Highlands · 120 Highlands Dr · (831) 620-1234 — cliffside views, steps from Point Lobos</li>
+            <li><strong>Alt:</strong> Cypress Inn · Lincoln &amp; 7th · (831) 624-3871 — boutique, walkable to dinner, 4.5★</li>
+            <li>Book directly — better rates than third party</li>
+          </ul>
+          <div class="alert">Hotel not yet booked — Carmel fills fast on summer weekends. Book ASAP.</div>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-sand"></div>
+          <div class="event-time c-sand">7:00 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Dinner in Carmel</div>
+            <span class="event-tag tag-food">Dinner</span>
+          </div>
+          <div class="event-address">Downtown Carmel · Ocean Ave &amp; surroundings</div>
+          <ul class="detail-list">
+            <li>Dozens of walkable options on Ocean Ave from the Cypress Inn</li>
+            <li>Strong Italian, seafood, and gastropub options all within a few blocks</li>
+            <li>If staying at Hyatt Highlands, the in-house restaurant has solid Pacific views</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════ TRANSITION ══════════════════ -->
+
+  <div class="container">
+    <div class="transition-card">
+      <div class="transition-icon">🛣️</div>
+      <div class="transition-text">
+        <h3>Monday Morning · Carmel <em>→</em> Napa Valley</h3>
+        <p>~2.5 hrs via CA-1 N to US-101 N · Pick up the Sweetie Pies cake in downtown Napa on the way through (noon), then check into the Meritage at 4 PM.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ NAPA ══════════════════════════════ -->
+
+  <div class="trip-divider napa" style="margin-top: 40px;">
+    <div class="trip-divider-line"></div>
+    <div class="trip-divider-label">🍷 Napa Valley · Days 2–5</div>
+    <div class="trip-divider-line"></div>
+  </div>
+
+  <div class="container napa-section">
+
+    <!-- MON JUN 29 -->
+    <div class="day">
+      <div class="day-header napa">
+        <span class="day-label">Monday</span>
+        <span class="day-date">June 29</span>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-gold"></div>
+          <div class="event-time c-gold">12:00 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Sweetie Pies Bakery</div>
+            <span class="event-tag tag-pickup">Cake Pickup</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=520+Main+St,+Napa,+CA+94559" target="_blank">520 Main St, Napa</a>
+            · (707) 257-7280
+          </div>
+          <ul class="detail-list">
+            <li>En route from Carmel — stop in downtown Napa before the Meritage</li>
+            <li>Open from 6:30 AM, closes 5:00 PM on Mondays</li>
+            <li>Keep cake cool in the car for the short drive to the resort</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-wine"></div>
+          <div class="event-time c-wine">4:00 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">The Meritage Resort &amp; Spa</div>
+            <span class="event-tag tag-hotel">Hotel · Check-In</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=875+Bordeaux+Way,+Napa,+CA+94558" target="_blank">875 Bordeaux Way, Napa</a>
+            · (707) 251-1900
+          </div>
+          <ul class="detail-list">
+            <li>Check-in from 4:00 PM · Checkout Thu Jul 2 by 11:00 AM</li>
+            <li>Room: King Bed, Vineyard View · 2 Adults</li>
+            <li>Itinerary #72072825024968</li>
+            <li>Resort fee: $56.50/night collected at property</li>
+            <li>Free cancellation until Jun 26 at 7:59 AM</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-wine"></div>
+          <div class="event-time c-wine">6:15 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Ciccio</div>
+            <span class="event-tag tag-dinner">Dinner</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=6770+Washington+St,+Yountville,+CA+94599" target="_blank">6770 Washington St, Yountville</a>
+            · (707) 945-1000
+          </div>
+          <ul class="detail-list">
+            <li>Party of 3 · Italian — wood-fired pizza, housemade pasta</li>
+            <li>Try the hot honey pizza and agnolotti</li>
+            <li>Can get loud — good energy to kick off the trip</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TUE JUN 30 -->
+    <div class="day">
+      <div class="day-header napa">
+        <span class="day-label">Tuesday</span>
+        <span class="day-date">June 30</span>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-gold"></div>
+          <div class="event-time c-gold">7:30 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Model Bakery</div>
+            <span class="event-tag tag-food">Breakfast</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=644+1st+St,+Napa,+CA+94559" target="_blank">644 1st St, Napa</a>
+            · (707) 259-1128
+          </div>
+          <ul class="detail-list">
+            <li>Opens 6:30 AM · Grab-and-go works perfect before the bike tour</li>
+            <li>Famous English muffins — Oprah-endorsed, worth the hype</li>
+            <li>Strong coffee and pastries; breakfast sandwiches if you want something heartier</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-mist"></div>
+          <div class="event-time c-mist">All Day</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Bike Tour</div>
+            <span class="event-tag tag-activity">Activity</span>
+          </div>
+          <div class="event-address">Departs from The Meritage Resort</div>
+          <ul class="detail-list">
+            <li>Organized by Mackenzie Magro — reminder coming the week of</li>
+            <li>Lunch included and confirmed</li>
+            <li>Your lunch: Tomato Brie · Sophia's lunch: Turkey Cheddar</li>
+          </ul>
+          <div class="alert">Mackenzie will send a full itinerary reminder the week of June 30. Watch for that email with departure time and route details.</div>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-wine"></div>
+          <div class="event-time c-wine">7:15 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Bear at Stanly Ranch</div>
+            <span class="event-tag tag-dinner">Dinner</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=200+Stanly+Crossroad,+Napa,+CA+94559" target="_blank">200 Stanly Crossroad, Napa</a>
+            · (707) 699-6250
+          </div>
+          <ul class="detail-list">
+            <li>Party of 3 · Auberge Collection</li>
+            <li>~10 min from the Meritage — time to clean up after the bike tour</li>
+            <li>Farm-to-table, prix fixe with multiple options per course</li>
+            <li>Open until 10:00 PM</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- WED JUL 1 -->
+    <div class="day">
+      <div class="day-header napa">
+        <span class="day-label">Wednesday</span>
+        <span class="day-date">July 1</span>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-gold"></div>
+          <div class="event-time c-gold">8:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Boon Fly Café</div>
+            <span class="event-tag tag-food">Breakfast</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=4048+Sonoma+Hwy,+Napa,+CA+94559" target="_blank">4048 Sonoma Hwy, Napa</a>
+            · (707) 299-4870
+          </div>
+          <ul class="detail-list">
+            <li>Opens 7:00 AM · ~10 min from the Meritage, on the way toward Biale</li>
+            <li>The red barn — can't miss it · 4.6★ · Carneros</li>
+            <li>Order the chilaquiles, brioche French toast, or the famous bucket of mini donuts</li>
+            <li>Solid coffee, fast service even when busy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-purple"></div>
+          <div class="event-time c-purple">10:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Robert Biale Vineyards</div>
+            <span class="event-tag tag-winery">Winery · Reds</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=4038+Big+Ranch+Rd,+Napa,+CA+94558" target="_blank">4038 Big Ranch Rd, Napa</a>
+            · (707) 257-7555
+          </div>
+          <ul class="detail-list">
+            <li>Open 10:00 AM – 4:00 PM · Reservation recommended</li>
+            <li>Old-vine Zinfandel — some vines dating to the late 1800s</li>
+            <li>Known for the Black Chicken Zin; intimate, personal tastings</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-purple"></div>
+          <div class="event-time c-purple">2:30 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">O'Brien Estate Winery</div>
+            <span class="event-tag tag-winery">Winery</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=1200+Orchard+Ave,+Napa,+CA+94558" target="_blank">1200 Orchard Ave, Napa</a>
+            · (707) 252-8463
+          </div>
+          <ul class="detail-list">
+            <li>Open 10:00 AM – 4:00 PM · Reservation recommended</li>
+            <li>Intimate family winery — Chardonnay, Merlot, Cab</li>
+            <li>Stunning views, goats on property, golden hour setting</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-wine"></div>
+          <div class="event-time c-wine">7:00 PM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">La Toque</div>
+            <span class="event-tag tag-dinner">Dinner</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=1314+McKinstry+St,+Napa,+CA+94559" target="_blank">1314 McKinstry St, Napa</a>
+            · (707) 257-5157
+          </div>
+          <ul class="detail-list">
+            <li>Party of 2 · A la carte dining</li>
+            <li>Confirmation: <strong>TOCK-R-S4Q7PS55</strong></li>
+            <li>$120 deposit paid (Visa 4307) — applied to final bill</li>
+            <li>~2 hrs 45 min · Complimentary valet at Westin Verasa out front</li>
+            <li>Dress code: smart / elegant — no shorts or flip-flops</li>
+            <li>Corkage: $50/bottle (max 4), one waived per bottle purchased</li>
+          </ul>
+          <div class="alert">15-minute grace period — reservations forfeited after that. Non-refundable within 72 hours. Call 707-257-5157 to modify.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THU JUL 2 -->
+    <div class="day">
+      <div class="day-header napa">
+        <span class="day-label">Thursday</span>
+        <span class="day-date">July 2</span>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-purple"></div>
+          <div class="event-time c-purple">6:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Hot Air Balloon Ride</div>
+            <span class="event-tag tag-activity">Activity</span>
+          </div>
+          <div class="event-address">Napa Valley — confirm operator &amp; meeting point at booking</div>
+          <ul class="detail-list">
+            <li>Flights launch at sunrise for best wind conditions</li>
+            <li>~1 hour in the air, 3–4 hrs total with setup and transport</li>
+            <li>Champagne toast on landing included with most operators</li>
+            <li><strong>Napa Valley Aloft</strong> (4.8★, 1,600+ reviews) · (707) 944-4400 · Yountville</li>
+            <li><strong>Alt:</strong> Napa Valley Balloons (4.8★) · (707) 944-0228 · downtown Napa</li>
+          </ul>
+          <div class="alert">Book now — July 4th weekend fills these fast. Flights are weather-dependent; operators call you day-of if conditions change. Back well before 11 AM checkout.</div>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-mist"></div>
+          <div class="event-time c-mist">11:00 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Checkout · The Meritage</div>
+            <span class="event-tag tag-hotel">Hotel</span>
+          </div>
+          <div class="event-address">875 Bordeaux Way, Napa</div>
+          <ul class="detail-list">
+            <li>Checkout by 11:00 AM</li>
+            <li>Late checkout subject to availability — call ahead if needed</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="event">
+        <div class="event-time-col">
+          <div class="event-dot d-ocean"></div>
+          <div class="event-time c-ocean">11:30 AM</div>
+        </div>
+        <div class="event-card">
+          <div class="event-card-top">
+            <div class="event-name">Drive Home · Napa → Huntington Beach</div>
+            <span class="event-tag tag-drive">Drive</span>
+          </div>
+          <div class="event-address">
+            <a href="https://maps.google.com/?q=8681+Doremere+Dr,+Huntington+Beach,+CA" target="_blank">8681 Doremere Dr, Huntington Beach</a>
+          </div>
+          <ul class="detail-list">
+            <li>~7 hrs via I-5 South · ~430 miles</li>
+            <li>Beat LA rush hour — aim to be south of Bakersfield before 4 PM</li>
+            <li>Lunch stop: Harris Ranch on I-5 (classic road trip stop) or detour into Paso Robles for something better</li>
+            <li>Gas up before the Grapevine — last cheap fuel for a while</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">California · June 28 – July 2, 2026 · Big Sur + Napa Valley</div>
+
+</body>
+</html>
